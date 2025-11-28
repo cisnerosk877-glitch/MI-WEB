@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>KAMMER´S - Catálogo Deslizante</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap');
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to bottom, #ffecd2, #ffad33);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+    }
+
+    header {
+        font-family: 'Lora', serif;
+        background: linear-gradient(to right, #ff7a00, #ffb84d);
+        color: white;
+        text-align: center;
+        padding: 40px 0;
+        font-size: 60px;
+        font-weight: bold;
+        letter-spacing: 4px;
+        width: 100%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        text-shadow: 3px 3px 5px rgba(0,0,0,0.5);
+    }
+
+    #btn-editar {
+        margin: 20px;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        background: linear-gradient(to right, #ff7a00, #ffb84d);
+        color: white;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        transition: 0.3s;
+    }
+    #btn-editar:hover { background: linear-gradient(to right, #ff9c33, #ffc266); }
+
+    .tabs {
+        display: flex;
+        margin: 25px 0;
+        border-radius: 15px;
+        overflow: hidden;
+        width: 90%;
+        max-width: 1000px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .tabs button {
+        flex: 1;
+        padding: 18px;
+        font-size: 22px;
+        font-weight: bold;
+        background: linear-gradient(to right, #ff9f3d, #ffcc99);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .tabs button.active { background: linear-gradient(to right, #e66a00, #ffb84d); }
+
+    .content {
+        display: none;
+        width: 90%;
+        max-width: 1000px;
+        margin-bottom: 50px;
+    }
+    .active-content { display: block; }
+
+    .carrusel-container {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .carrusel {
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+
+    .producto {
+        min-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .producto img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .producto input {
+        font-size: 24px;
+        margin: 5px 0;
+        padding: 10px;
+        width: 80%;
+        border: none;
+        border-radius: 10px;
+        text-align: center;
+        background: linear-gradient(to right, #ff9f3d, #ffcc99);
+        color: white;
+        font-weight: bold;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+
+    .producto h3, .producto p {
+        margin: 5px 0;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        color: white;
+    }
+    .producto h3 { font-size: 32px; }
+    .producto p { font-size: 28px; }
+
+    .oculto { display: none; }
+
+    .btn-slide {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 122, 0, 0.7);
+        border: none;
+        color: white;
+        padding: 20px;
+        font-size: 24px;
+        font-weight: bold;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 10;
+        transition: 0.3s;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    }
+    .btn-slide:hover { background: rgba(255, 122, 0, 1); }
+    .btn-left { left: 10px; }
+    .btn-right { right: 10px; }
+
+    .btn-agregar {
+        margin: 15px 0;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 12px;
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        background: linear-gradient(to right, #ff7a00, #ffb84d);
+        color: white;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        transition: 0.3s;
+    }
+    .btn-agregar:hover { background: linear-gradient(to right, #ff9c33, #ffc266); }
+</style>
+</head>
+<body>
+
+<header>KAMMER´S</header>
+<button id="btn-editar" onclick="modoEdicion()">Modo edición</button>
+
+<div class="tabs">
+    <button class="active" onclick="openTab('chaquetas')">CATÁLOGO CHAQUETAS</button>
+    <button onclick="openTab('navidad')">CATÁLOGO NAVIDAD</button>
+</div>
+
+<div id="chaquetas" class="content active-content">
+    <button class="btn-agregar oculto" onclick="agregarProducto('chaquetas')">Agregar producto a Chaquetas</button>
+    <div class="carrusel-container">
+        <button class="btn-slide btn-left" onclick="mover('chaquetas', -1)">&#10094;</button>
+        <div id="carrusel-chaquetas" class="carrusel"></div>
+        <button class="btn-slide btn-right" onclick="mover('chaquetas', 1)">&#10095;</button>
+    </div>
+</div>
+
+<div id="navidad" class="content">
+    <button class="btn-agregar oculto" onclick="agregarProducto('navidad')">Agregar producto a Navidad</button>
+    <div class="carrusel-container">
+        <button class="btn-slide btn-left" onclick="mover('navidad', -1)">&#10094;</button>
+        <div id="carrusel-navidad" class="carrusel"></div>
+        <button class="btn-slide btn-right" onclick="mover('navidad', 1)">&#10095;</button>
+    </div>
+</div>
+
+<script>
+let catalogoChaquetas = JSON.parse(localStorage.getItem('catalogoChaquetas')) || [];
+let catalogoNavidad = JSON.parse(localStorage.getItem('catalogoNavidad')) || [];
+let modo = false;
+let indices = { chaquetas: 0, navidad: 0 };
+
+function guardarLocalStorage(cat){
+    if(cat === 'chaquetas'){
+        localStorage.setItem('catalogoChaquetas', JSON.stringify(catalogoChaquetas));
+    } else {
+        localStorage.setItem('catalogoNavidad', JSON.stringify(catalogoNavidad));
+    }
+}
+
+function mostrarCategoria(cat){
+    const carrusel = document.getElementById("carrusel-" + cat);
+    const content = document.getElementById(cat);
+    if(!content.classList.contains('active-content')) return; 
+    carrusel.innerHTML = "";
+    const lista = cat === 'chaquetas' ? catalogoChaquetas : catalogoNavidad;
+    lista.forEach((p,i)=>{
+        carrusel.innerHTML += `
+        <div class="producto">
+            <img src="${p.imagen}" onclick="cambiarImagen('${cat}', ${i})">
+            <input class="${modo ? '' : 'oculto'}" type="text" value="${p.nombre}" onchange="guardarCambios('${cat}',${i},'nombre',this.value)">
+            <h3 class="${modo ? 'oculto' : ''}">${p.nombre}</h3>
+            <input class="${modo ? '' : 'oculto'}" type="text" value="${p.precio}" onchange="guardarCambios('${cat}',${i},'precio',this.value)">
+            <p class="${modo ? 'oculto' : ''}">Precio: ${p.precio}</p>
+        </div>`;
+    });
+    actualizarPosicion(cat);
+}
+
+function mostrarProductos(){
+    mostrarCategoria('chaquetas');
+    mostrarCategoria('navidad');
+}
+
+function modoEdicion(){
+    if(!modo){
+        const clave = prompt("Ingresa la contraseña de edición:");
+        if(clave !== "TuClaveSegura") return alert("Contraseña incorrecta");
+    }
+    modo = !modo;
+    document.getElementById("btn-editar").innerText = modo ? "Salir de edición" : "Modo edición";
+    document.querySelectorAll('.btn-agregar').forEach(b=>{
+        modo ? b.classList.remove('oculto') : b.classList.add('oculto');
+    });
+    mostrarProductos();
+}
+
+function mover(cat, dir){
+    const lista = cat === 'chaquetas' ? catalogoChaquetas : catalogoNavidad;
+    if(lista.length === 0) return;
+    indices[cat] += dir;
+    if(indices[cat] < 0) indices[cat] = lista.length - 1;
+    if(indices[cat] >= lista.length) indices[cat] = 0;
+    actualizarPosicion(cat);
+}
+
+function actualizarPosicion(cat){
+    const carrusel = document.getElementById("carrusel-" + cat);
+    const lista = cat === 'chaquetas' ? catalogoChaquetas : catalogoNavidad;
+    if(carrusel.querySelector('.producto')){
+        const ancho = carrusel.querySelector('.producto').clientWidth;
+        carrusel.style.transform = `translateX(-${indices[cat] * ancho}px)`;
+    }
+}
+
+function agregarProducto(cat){
+    if(!modo) return alert("Debes estar en modo edición");
+    const nombre = prompt("Nombre del producto:");
+    const precio = prompt("Precio:");
+    const imagen = prompt("Link de la imagen:");
+    if(nombre && precio && imagen){
+        const lista = cat === 'chaquetas' ? catalogoChaquetas : catalogoNavidad;
+        lista.push({nombre, precio, imagen});
+        guardarLocalStorage(cat);
+        mostrarCategoria(cat);
+    }
+}
+
+function cambiarImagen(cat,i){
+    if(!modo) return;
+    const lista = cat === 'chaquetas' ? catalogoChaquetas : catalogoNavidad;
+    const nueva = prompt("Pega el link de la imagen nueva:");
+    if(nueva){
+        lista[i].imagen = nueva;
+        guardarLocalStorage(cat);
+        mostrarCategoria(cat);
+    }
+}
+
+function guardarCambios(cat,i,campo,valor){
+    const lista = cat === 'chaquetas' ? catalogoChaquetas : catalogoNavidad;
+    lista[i][campo] = valor;
+    guardarLocalStorage(cat);
+    mostrarCategoria(cat);
+}
+
+function openTab(tabName){
+    document.querySelectorAll('.content').forEach(c => c.classList.remove('active-content'));
+    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active-content');
+    event.target.classList.add('active');
+    mostrarCategoria(tabName);
+}
+
+mostrarProductos();
+</script>
+</body>
+</html>
